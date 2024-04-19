@@ -5,3 +5,5 @@
       apt:
         update_cache: yes
         upgrade: yes
+    - name: install htop package
+      action: apt name=htop state=present update_cache=yes
