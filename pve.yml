@@ -5,7 +5,5 @@
       apt:
         update_cache: yes
         upgrade: yes
-    - name: install python3-apt package
-      action: apt name=pyton3-apt state=present update_cache=yes
     - name: install htop package
       action: apt name=htop state=present update_cache=yes
