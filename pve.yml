@@ -1,7 +1,5 @@
 - hosts: proxmox
   become: true
-  roles:
-    - geerlingguy.clamav
   tasks:
     - name: Update and upgrade apt packages
       apt:
