@@ -4,7 +4,7 @@
     - name: Update and upgrade apt packages
       apt:
         update_cache: yes
+      ignore_errors: yes
         upgrade: yes
-        ignore_errors: yes
     - name: install htop package
       action: apt name=htop state=present update_cache=yes
