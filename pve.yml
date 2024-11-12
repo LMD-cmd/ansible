@@ -1,6 +1,5 @@
   hosts: proxmox
   become: true
-  gather_facts: true
   
   tasks:
     - name: Update apt cache (Debian/Ubuntu)
