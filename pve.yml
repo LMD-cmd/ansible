@@ -1,7 +1,6 @@
 ---
 - name: Update and upgrade Linux systems
   hosts: all
-  become: true
   gather_facts: true
   
   tasks:
