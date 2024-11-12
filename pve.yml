@@ -1,16 +1,14 @@
-  hosts: proxmox
-  become: true
-  
+---
+- name: Update Linux system
+  hosts: all
+  become: yes
+
   tasks:
-    - name: Update apt cache (Debian/Ubuntu)
+    - name: Update package lists
       apt:
         update_cache: yes
-        cache_valid_time: 3600  # Consider cache valid for 1 hour
-      when: ansible_os_family == "Debian"
-      
-    - name: Upgrade all packages (Debian/Ubuntu)
+        cache_valid_time: 3600
+
+    - name: Upgrade packages
       apt:
-        upgrade: dist
-        autoremove: yes
-        autoclean: yes
-      when: ansible_os_family == "Debian"
+        upgrade: dist-upgrade
