@@ -1,6 +1,6 @@
 ---
 - name: Update Debian Linux Hosts
-  hosts: debian_servers  # This is the host group defined in Semaphore or your inventory file
+  hosts: debian_hosts  # This is the host group defined in Semaphore or your inventory file
   become: yes  # Use 'sudo' to execute commands as root
   tasks:
   
