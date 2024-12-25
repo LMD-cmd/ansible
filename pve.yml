@@ -3,7 +3,7 @@
 # Playbook for my Proxmox VMs
 ###############################################
 - name: ansible-first-01
-  hosts: proxmox
+  hosts: tautulli
   tasks:
 
     #####################
