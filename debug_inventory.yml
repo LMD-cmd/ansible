@@ -1,0 +1,9 @@
+---
+- name: Debug Inventory Variables
+  hosts: all
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Print all host variables
+      debug:
+        var: hostvars[inventory_hostname]
