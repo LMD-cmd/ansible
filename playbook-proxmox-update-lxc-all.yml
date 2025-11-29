@@ -1,4 +1,6 @@
 ---
+- import_playbook: playbook-configure-apt-proxy.yml
+
 - name: Alle Server aktualisieren
   # Wir zielen auf alle laufenden LXC Container (Standard-Gruppen des Plugins)
   hosts: proxmox_all_lxc:&proxmox_all_running
