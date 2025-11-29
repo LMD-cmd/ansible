@@ -13,15 +13,12 @@ want_facts: true
 # Das verhindert, dass dein Proxmox-Host (pve-01) in der Liste landet
 want_proxmox_nodes_ansible_host: false
 
-# Jetzt funktionieren die Filter, weil die "Facts" da sind
-# Jetzt funktionieren die Filter, weil die "Facts" da sind
-filters:
-  - proxmox_status == 'running'
-  - proxmox_type == 'lxc'
-  # Hier schließen wir die Sonderfälle direkt aus
-  - proxmox_name != 'pve-01'
-  - proxmox_name != 'ansible-lxc'
-  - proxmox_name != 'NUT-debian12'
+# Wir nutzen keyed_groups statt filters, das ist robuster
+keyed_groups:
+  - key: proxmox_type
+    prefix: proxmox_type
+  - key: proxmox_status
+    prefix: proxmox_status
 
 compose:
   ansible_connection: "'community.proxmox.proxmox_pct_remote'"

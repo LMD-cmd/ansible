@@ -1,7 +1,7 @@
 ---
 - name: Alle Server aktualisieren
-  # Jetzt reicht "all", weil das Inventory File schon sauber filtert
-  hosts: all
+  # Wir zielen NUR auf laufende LXC Container
+  hosts: proxmox_type_lxc:&proxmox_status_running
   
   # Wenn ein Server nicht erreichbar ist: Ignorieren statt Fehler werfen!
   ignore_unreachable: true
