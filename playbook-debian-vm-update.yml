@@ -1,0 +1,49 @@
+---
+- name: Debian VMs aktualisieren und konfigurieren
+  hosts: proxmox_all_qemu
+  become: true
+  
+  vars:
+    apt_proxy_url: "http://10.0.200.108:3142"
+    packages_to_remove:
+      - clamav
+      - clamav-daemon
+      - clamav-freshclam
+
+  tasks:
+    - name: Prüfen ob es ein Debian System ist
+      debug:
+        msg: "System ist {{ ansible_os_family }}. Fahre fort..."
+      when: ansible_os_family == 'Debian'
+
+    - name: Block für Debian-basierte Systeme
+      block:
+        - name: APT Proxy konfigurieren (/etc/apt/apt.conf.d/01proxy)
+          copy:
+            dest: /etc/apt/apt.conf.d/01proxy
+            content: |
+              Acquire::http::Proxy "{{ apt_proxy_url }}";
+            owner: root
+            group: root
+            mode: '0644'
+
+        - name: ClamAV entfernen
+          apt:
+            name: "{{ packages_to_remove }}"
+            state: absent
+            purge: yes
+
+        - name: Update apt cache
+          apt:
+            update_cache: yes
+            cache_valid_time: 3600
+
+        - name: Upgrade aller Pakete
+          apt:
+            upgrade: dist
+
+        - name: Unnötige Abhängigkeiten entfernen
+          apt:
+            autoremove: yes
+
+      when: ansible_os_family == 'Debian'

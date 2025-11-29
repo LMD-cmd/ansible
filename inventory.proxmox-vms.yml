@@ -1,0 +1,16 @@
+# Inventory für Proxmox VMs (QEMU)
+plugin: community.proxmox.proxmox
+url: "https://10.0.200.97:8006"
+validate_certs: false
+user: "root@pam"
+token_id: "ansible"
+token_secret: "7bf9b58d-7236-4d3a-8b3e-c8e847587e7e"
+
+# Facts laden um IP-Adressen etc. zu bekommen
+want_facts: true
+
+# Proxmox Node selbst ausschließen
+want_proxmox_nodes_ansible_host: false
+
+# Hier KEIN compose für proxmox_pct_remote, da wir VMs per SSH erreichen wollen.
+# Voraussetzung: Die VMs sind per DNS oder IP erreichbar und haben den SSH Key hinterlegt.
