@@ -13,12 +13,8 @@ want_facts: true
 # Das verhindert, dass dein Proxmox-Host (pve-01) in der Liste landet
 want_proxmox_nodes_ansible_host: false
 
-# Wir nutzen keyed_groups statt filters, das ist robuster
-keyed_groups:
-  - key: proxmox_type
-    prefix: proxmox_type
-  - key: proxmox_status
-    prefix: proxmox_status
+# Wir nutzen die Standard-Gruppen des Plugins (proxmox_all_lxc, proxmox_all_running)
+# Daher keine manuelle Konfiguration hier nötig.
 
 compose:
   ansible_connection: "'community.proxmox.proxmox_pct_remote'"

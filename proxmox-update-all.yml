@@ -1,7 +1,7 @@
 ---
 - name: Alle Server aktualisieren
-  # Wir zielen NUR auf laufende LXC Container
-  hosts: proxmox_type_lxc:&proxmox_status_running
+  # Wir zielen auf alle laufenden LXC Container (Standard-Gruppen des Plugins)
+  hosts: proxmox_all_lxc:&proxmox_all_running
   
   # Wenn ein Server nicht erreichbar ist: Ignorieren statt Fehler werfen!
   ignore_unreachable: true
