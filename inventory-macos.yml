@@ -1,0 +1,8 @@
+all:
+  children:
+    macos_hosts:
+      hosts:
+        macbook:
+          ansible_host: 10.0.200.24
+          ansible_user: luiscruzeiro
+          ansible_become_password: "{{ vault_macos_sudo_password | default(omit) }}"

@@ -1,0 +1,63 @@
+---
+- name: macOS System und Homebrew Updates
+  hosts: macos_hosts
+  gather_facts: true
+  
+  tasks:
+    - name: Verfügbare macOS Updates auflisten
+      command: softwareupdate --list
+      register: macos_updates
+      changed_when: false
+      failed_when: false
+      become: false
+
+    - name: Verfügbare Updates anzeigen
+      debug:
+        var: macos_updates.stdout_lines
+      when: macos_updates.stdout != ""
+
+    - name: Alle empfohlenen macOS Updates installieren
+      command: softwareupdate --install --recommended
+      become: true
+      register: update_result
+      changed_when: "'installed' in update_result.stdout.lower() or 'downloaded' in update_result.stdout.lower()"
+      failed_when: update_result.rc != 0 and 'No updates' not in update_result.stdout
+
+    - name: Prüfen ob Homebrew installiert ist
+      stat:
+        path: /opt/homebrew/bin/brew
+      register: homebrew_intel
+      failed_when: false
+
+    - name: Prüfen ob Homebrew (Intel) installiert ist
+      stat:
+        path: /usr/local/bin/brew
+      register: homebrew_arm
+      failed_when: false
+
+    - name: Homebrew Pfad setzen (Apple Silicon)
+      set_fact:
+        brew_path: /opt/homebrew/bin/brew
+      when: homebrew_intel.stat.exists
+
+    - name: Homebrew Pfad setzen (Intel)
+      set_fact:
+        brew_path: /usr/local/bin/brew
+      when: not homebrew_intel.stat.exists and homebrew_arm.stat.exists
+
+    - name: Homebrew aktualisieren
+      community.general.homebrew:
+        update_homebrew: true
+        path: "{{ brew_path | default(omit) }}"
+      when: homebrew_intel.stat.exists or homebrew_arm.stat.exists
+
+    - name: Alle Homebrew Pakete upgraden
+      community.general.homebrew:
+        upgrade_all: true
+        path: "{{ brew_path | default(omit) }}"
+      when: homebrew_intel.stat.exists or homebrew_arm.stat.exists
+
+    - name: Homebrew Cleanup durchführen
+      command: "{{ brew_path }} cleanup"
+      when: homebrew_intel.stat.exists or homebrew_arm.stat.exists
+      changed_when: false
