@@ -18,15 +18,6 @@
 
     - name: Block für Debian-basierte Systeme
       block:
-        - name: APT Proxy konfigurieren (/etc/apt/apt.conf.d/01proxy)
-          copy:
-            dest: /etc/apt/apt.conf.d/01proxy
-            content: |
-              Acquire::http::Proxy "{{ apt_proxy_url }}";
-            owner: root
-            group: root
-            mode: '0644'
-
         - name: ClamAV entfernen
           apt:
             name: "{{ packages_to_remove }}"
