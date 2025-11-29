@@ -1,0 +1,8 @@
+plugin: community.proxmox.proxmox
+url: "https://10.0.200.97:8006"
+validate_certs: false
+user: "root@pam"
+token_id: "ansible"
+token_secret: "7bf9b58d-7236-4d3a-8b3e-c8e847587e7e"
+want_facts: true
+want_proxmox_nodes_ansible_host: false
