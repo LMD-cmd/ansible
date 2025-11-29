@@ -6,13 +6,9 @@ user: "root@pam"
 token_id: "ansible"               # Dein Token-Name von oben
 token_secret: "7bf9b58d-7236-4d3a-8b3e-c8e847587e7e"
 
-# WICHTIG: Damit Ansible weiß, ob der Container an ist
-want_facts: true
-
-# Das hier sortiert deine Container automatisch in Gruppen
-keyed_groups:
-  - key: proxmox_status
-    prefix: status
+# NEU: Das hier filtert alles raus, was nicht läuft!
+filters:
+  - status == 'running'
 
 # Der Trick: Wir sagen Ansible, wie es sich verbinden soll
 compose:
