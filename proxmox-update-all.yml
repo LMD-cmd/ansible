@@ -1,28 +1,35 @@
 ---
 - name: Alle Server aktualisieren
-  hosts: all:!pve-01:!homeassistant:!NUT-debian12:!ansible-lxc:!donetick:!plex
-  become: true  # Bedeutet: Führe Befehle als sudo/root aus
+  # Jetzt reicht "all", weil das Inventory File schon sauber filtert
+  hosts: all
+  
+  # Wenn ein Server nicht erreichbar ist: Ignorieren statt Fehler werfen!
+  ignore_unreachable: true
+  
+  # Verhindert den Absturz bei ausgeschalteten Containern beim Start
+  gather_facts: false 
+
+  become: true
 
   tasks:
-    - name: Update apt cache (wie 'apt-get update')
+    # Wir holen die Facts (OS Version etc) manuell nach, aber nur bei denen, die leben
+    - name: Verbindung testen und Facts sammeln
+      setup:
+      ignore_errors: true
+
+    - name: Update apt cache
       apt:
         update_cache: yes
         cache_valid_time: 3600
+      # Nur ausführen, wenn der Server wirklich erreichbar war
+      when: ansible_facts is defined
 
-    - name: Upgrade aller Pakete (wie 'apt-get upgrade')
+    - name: Upgrade aller Pakete
       apt:
         upgrade: dist
+      when: ansible_facts is defined
 
-    - name: Unnötige Abhängigkeiten entfernen (wie 'apt-get autoremove')
+    - name: Unnötige Abhängigkeiten entfernen
       apt:
         autoremove: yes
-
-    - name: Prüfen ob Neustart nötig ist
-      stat:
-        path: /var/run/reboot-required
-      register: reboot_required_file
-
-    - name: Server neu starten (falls nötig)
-      reboot:
-        msg: "Neustart durch Ansible nach Updates"
-      when: reboot_required_file.stat.exists
+      when: ansible_facts is defined

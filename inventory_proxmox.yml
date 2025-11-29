@@ -6,15 +6,23 @@ user: "root@pam"
 token_id: "ansible"               # Dein Token-Name von oben
 token_secret: "7bf9b58d-7236-4d3a-8b3e-c8e847587e7e"
 
-# NEU: Das hier filtert alles raus, was nicht läuft!
+# WICHTIG: Das hier hat gefehlt!
+# Ohne das weiß Ansible nicht, ob ein Container läuft oder nicht.
+want_facts: true
+
+# Das verhindert, dass dein Proxmox-Host (pve-01) in der Liste landet
+want_proxmox_nodes_ansible_host: false
+
+# Jetzt funktionieren die Filter, weil die "Facts" da sind
 filters:
   - status == 'running'
+  - type == 'lxc'
+  # Hier schließen wir die Sonderfälle direkt aus
+  - name != 'homeassistant'
+  - name != 'NUT-debian12'
 
-# Der Trick: Wir sagen Ansible, wie es sich verbinden soll
 compose:
-  # Wir nutzen das Proxmox-Host-SSH als "Tunnel"
   ansible_connection: "'community.proxmox.proxmox_pct_remote'"
-  # Wir verbinden uns immer mit dem Proxmox-Host (nicht mit dem Container direkt!)
-  ansible_host: "'10.0.200.97'" # <-- Deine Proxmox-IP (muss identisch zu oben sein)
-  ansible_user: "'root'"         # Der User, mit dem wir den SSH-Key ausgetauscht haben
-  ansible_proxmox_vmid: vmid     # Die ID des Containers
+  ansible_host: "'192.168.1.XX'" # <-- DEINE IP LASSEN
+  ansible_user: "'root'"
+  ansible_proxmox_vmid: vmid
