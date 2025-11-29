@@ -1,0 +1,19 @@
+---
+- name: Apt-Cacher-NG Konfiguration
+  hosts: apt-cacher-ng
+  become: true
+
+  tasks:
+    - name: Sicherstellen dass PassThroughPattern aktiviert ist
+      lineinfile:
+        path: /etc/apt-cacher-ng/acng.conf
+        regexp: '^#?\s*PassThroughPattern:'
+        line: 'PassThroughPattern: .*'
+        state: present
+      notify: Restart apt-cacher-ng
+
+  handlers:
+    - name: Restart apt-cacher-ng
+      systemd:
+        name: apt-cacher-ng
+        state: restarted

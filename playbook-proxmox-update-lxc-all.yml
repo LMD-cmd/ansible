@@ -1,4 +1,5 @@
 ---
+- import_playbook: playbook-configure-apt-cacher-ng.yml
 - import_playbook: playbook-configure-apt-proxy.yml
 
 - name: Alle Server aktualisieren
