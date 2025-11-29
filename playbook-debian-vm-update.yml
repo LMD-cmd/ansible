@@ -1,6 +1,6 @@
 ---
 - name: Debian VMs aktualisieren und konfigurieren
-  hosts: proxmox_all_qemu
+  hosts: debian_vms
   become: true
   
   vars:

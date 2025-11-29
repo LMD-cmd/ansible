@@ -1,0 +1,9 @@
+all:
+  children:
+    debian_vms:
+      hosts:
+        # Hier kannst du deine VMs eintragen.
+        # Name ist frei wählbar, ansible_host ist die IP.
+        debian-vm-01:
+          ansible_host: 10.0.200.109  # <--- BITTE IP EINTRAGEN
+          ansible_user: root
