@@ -1,0 +1,22 @@
+---
+- name: Pakete entfernen und bereinigen
+  hosts: proxmox_all_lxc:&proxmox_all_running
+  become: true
+  
+  vars:
+    # Standardmäßig ClamAV entfernen. Kann beim Aufruf überschrieben werden.
+    packages_to_remove:
+      - clamav
+      - clamav-daemon
+      - clamav-freshclam
+
+  tasks:
+    - name: Definierte Pakete entfernen
+      apt:
+        name: "{{ packages_to_remove }}"
+        state: absent
+        purge: yes # Konfigurationsdateien auch löschen
+
+    - name: Nicht mehr benötigte Abhängigkeiten entfernen (autoremove)
+      apt:
+        autoremove: yes
