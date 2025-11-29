@@ -1,6 +1,6 @@
 ---
 - name: Alle Server aktualisieren
-  hosts: all:!pve-01:!homeassistant:!NUT-Debian
+  hosts: all:!pve-01:!homeassistant:!NUT-debian12:!ansible-lxc:!donetick:!plex
   become: true  # Bedeutet: Führe Befehle als sudo/root aus
 
   tasks:
