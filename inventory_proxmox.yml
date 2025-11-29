@@ -1,0 +1,21 @@
+# Diese Datei holt automatisch alle Container von Proxmox
+plugin: community.proxmox.proxmox
+url: "https://10.0.200.97:8006"  # <-- Deine Proxmox-IP anpassen!
+validate_certs: false
+user: "root@pam"
+token_id: "ansible"               # Dein Token-Name von oben
+token_secret: "7bf9b58d-7236-4d3a-8b3e-c8e847587e7e"
+
+# Wir filtern: Wir wollen nur LXC Container, die auch laufen
+filters:
+  - status == 'running'
+  - type == 'lxc'
+
+# Der Trick: Wir sagen Ansible, wie es sich verbinden soll
+compose:
+  # Wir nutzen das Proxmox-Host-SSH als "Tunnel"
+  ansible_connection: "'community.proxmox.proxmox_pct_remote'"
+  # Wir verbinden uns immer mit dem Proxmox-Host (nicht mit dem Container direkt!)
+  ansible_host: "'10.0.200.97'" # <-- Deine Proxmox-IP (muss identisch zu oben sein)
+  ansible_user: "'root'"         # Der User, mit dem wir den SSH-Key ausgetauscht haben
+  ansible_proxmox_vmid: vmid     # Die ID des Containers
