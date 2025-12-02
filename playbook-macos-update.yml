@@ -57,7 +57,14 @@
         path: "{{ brew_path | default(omit) }}"
       when: homebrew_intel.stat.exists or homebrew_arm.stat.exists
 
-    - name: Homebrew Cleanup durchführen
-      command: "{{ brew_path }}/brew cleanup"
+    - name: Homebrew Aufräumen (Cache & Logs)
+      community.general.homebrew:
+        cleanup: true
+        path: "{{ brew_path | default(omit) }}"
       when: homebrew_intel.stat.exists or homebrew_arm.stat.exists
-      changed_when: false
+
+    - name: Verwaiste Abhängigkeiten entfernen
+      community.general.homebrew:
+        autoremove: true
+        path: "{{ brew_path | default(omit) }}"
+      when: homebrew_intel.stat.exists or homebrew_arm.stat.exists
