@@ -56,6 +56,17 @@
         upgrade_all: true
         path: "{{ brew_path | default(omit) }}"
       when: homebrew_intel.stat.exists or homebrew_arm.stat.exists
+      ignore_errors: true
+      register: brew_upgrade_result
+
+    - name: Deaktivierte Formeln entfernen (z.B. icu4c@75)
+      command: "{{ brew_path }}/brew uninstall --ignore-dependencies icu4c@75"
+      when: 
+        - homebrew_intel.stat.exists or homebrew_arm.stat.exists
+        - brew_upgrade_result is failed
+        - "'icu4c@75' in brew_upgrade_result.msg"
+      ignore_errors: true
+
 
     - name: Homebrew Aufräumen (Cache & Logs)
       community.general.homebrew:
